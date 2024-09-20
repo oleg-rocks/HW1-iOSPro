@@ -38,7 +38,3 @@ struct ContentView: View {
         .environmentObject(appState)
     }
 }
-
-#Preview {
-    ContentView()
-}

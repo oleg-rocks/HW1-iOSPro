@@ -18,25 +18,25 @@ enum ListItem: String, CaseIterable {
 struct SecondView: View {
     @EnvironmentObject var appState: AppState
     @State private var selectedItemToNavigate: ListItem? = nil
-//    var selectedItem: ListItem?
     let items: [ListItem] = ListItem.allCases
     
     var body: some View {
-        NavigationView {
+        NavigationStack {
             List(items, id: \.self) { item in
-                NavigationLink(
-                    destination: ListItemDetailsView(title: item.rawValue),
-                    tag: item,
-                    selection: $selectedItemToNavigate
-                ) {
+                NavigationLink(value: item) {
                     Text(item.rawValue)
                 }
             }
+            .listStyle(PlainListStyle())
             .navigationTitle("Second")
+            .navigationDestination(for: ListItem.self) { selectedItem in
+                ListItemDetailsView(title: selectedItem.rawValue)
+            }
             .onAppear {
                 if let item = appState.selectedListItem {
                     DispatchQueue.main.async {
                         selectedItemToNavigate = item
+                        appState.selectedListItem = nil
                     }
                 }
             }
